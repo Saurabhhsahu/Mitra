@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -69,20 +68,21 @@ class _JournalHomePageState extends State<JournalHomePage> {
       body: entries.isEmpty
           ? const Center(child: Text('No entries yet.'))
           : ListView.builder(
-        itemCount: entries.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: ListTile(
-              title: Text(entries[index]),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () => _deleteEntry(index),
-              ),
+              itemCount: entries.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: ListTile(
+                    title: Text(entries[index]),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _deleteEntry(index),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'chatbot_screen.dart';
-import 'tasks_screen.dart';
 import 'articles_screen.dart';
 import 'journal_screen.dart';
 import '../sections/mood_section.dart';
@@ -83,8 +81,10 @@ class _LandingScreenState extends State<LandingScreen> {
                       icon: const Icon(Icons.play_arrow, size: 18),
                       label: const Text('Journal'),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
                         side: const BorderSide(color: Colors.black12),
                       ),
                     ),
@@ -103,8 +103,10 @@ class _LandingScreenState extends State<LandingScreen> {
                       icon: const Icon(Icons.article, size: 18),
                       label: const Text('Articles'),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
                         side: const BorderSide(color: Colors.black12),
                       ),
                     ),

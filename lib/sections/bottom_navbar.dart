@@ -6,7 +6,8 @@ class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const BottomNavBar({super.key, required this.currentIndex, required this.onTap});
+  const BottomNavBar(
+      {super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class BottomNavBar extends StatelessWidget {
         if (index == 1) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+            MaterialPageRoute(builder: (context) => const GeminiChatbot()),
           );
         } else if (index == 2) {
           Navigator.push(

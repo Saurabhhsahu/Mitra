@@ -33,7 +33,8 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   void _navigateToChatbotScreen(BuildContext context) {
-    Navigator.pushNamed(context, '/chatbot'); // Redirect to existing chatbot screen
+    Navigator.pushNamed(
+        context, '/chatbot'); // Redirect to existing chatbot screen
   }
 
   @override
@@ -42,7 +43,8 @@ class _TasksScreenState extends State<TasksScreen> {
       appBar: AppBar(
         title: const Text(
           'My Tasks',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
@@ -61,7 +63,10 @@ class _TasksScreenState extends State<TasksScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5)),
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5)),
                 ],
               ),
               child: Column(
@@ -71,11 +76,15 @@ class _TasksScreenState extends State<TasksScreen> {
                     children: [
                       Text(
                         'Progress: ${(getProgress() * 100).toInt()}%',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
                       ),
                       Text(
                         '${checkedTasks.where((checked) => checked).length}/${tasks.length} Tasks',
-                        style: const TextStyle(fontSize: 16, color: Colors.black54),
+                        style: const TextStyle(
+                            fontSize: 16, color: Colors.black54),
                       ),
                     ],
                   ),
@@ -86,7 +95,8 @@ class _TasksScreenState extends State<TasksScreen> {
                       value: getProgress(),
                       minHeight: 10,
                       backgroundColor: Colors.grey[200],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.blue),
                     ),
                   ),
                 ],
@@ -120,7 +130,10 @@ class _TasksScreenState extends State<TasksScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5)),
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5)),
                           ],
                         ),
                         child: Column(
@@ -140,26 +153,40 @@ class _TasksScreenState extends State<TasksScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  decoration: checkedTasks[index] ? TextDecoration.lineThrough : null,
-                                  color: checkedTasks[index] ? Colors.grey : Colors.black87,
+                                  decoration: checkedTasks[index]
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  color: checkedTasks[index]
+                                      ? Colors.grey
+                                      : Colors.black87,
                                 ),
                                 child: Text(task.name),
                               ),
                               trailing: AnimatedRotation(
                                 duration: const Duration(milliseconds: 200),
-                                turns: isExpanded ? 0.5 : 0, // Rotate 180° when expanded
-                                child: const Icon(Icons.expand_more, color: Colors.black54),
+                                turns: isExpanded
+                                    ? 0.5
+                                    : 0, // Rotate 180° when expanded
+                                child: const Icon(Icons.expand_more,
+                                    color: Colors.black54),
                               ),
                             ),
                             AnimatedCrossFade(
                               duration: const Duration(milliseconds: 200),
-                              crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                              crossFadeState: isExpanded
+                                  ? CrossFadeState.showSecond
+                                  : CrossFadeState.showFirst,
                               firstChild: const SizedBox.shrink(),
                               secondChild: Padding(
-                                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                                padding: const EdgeInsets.only(
+                                    left: 16, right: 16, bottom: 16),
                                 child: Text(
                                   task.description,
-                                  style: TextStyle(fontSize: 16, color: checkedTasks[index] ? Colors.grey : Colors.black54),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: checkedTasks[index]
+                                          ? Colors.grey
+                                          : Colors.black54),
                                 ),
                               ),
                             ),
@@ -179,17 +206,23 @@ class _TasksScreenState extends State<TasksScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const GeminiChatbot()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   child: const Text(
                     'New Task',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),
