@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "112302242147",
-    "project_id": "mitra-aab99",
-    "storage_bucket": "mitra-aab99.firebasestorage.app"
+    "project_number": "813737024941",
+    "project_id": "mitra-app-93f84",
+    "storage_bucket": "mitra-app-93f84.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:112302242147:android:9af152fa94af8e8600fb56",
+        "mobilesdk_app_id": "1:813737024941:android:4f88b062d19885a9d6d524",
         "android_client_info": {
           "package_name": "com.example.mitra"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDPiVaaywLGg0QZKGDLkO-vGa8cYIeBFQs"
+          "current_key": "AIzaSyCs6l1NGAAiVNcmP-9NWtO1MspnLY6QoyE"
         }
       ],
       "services": {

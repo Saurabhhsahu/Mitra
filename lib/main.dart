@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'screens/landing_screen.dart';
-// import 'services/database_service.dart';
+import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:mitra-aab99/firebase_options.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-void main() async{
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await DatabaseService.connect();  // Initialize MongoDB
-
-  // WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
   runApp(const MyApp());
 }
 
