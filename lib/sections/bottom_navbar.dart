@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/chatbot_screen.dart';
 import '../screens/tasks_screen.dart';
+import '../screens/profile_screen.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -54,6 +55,11 @@ class BottomNavBar extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const TasksScreen()),
+          );
+        }else if(index == 4){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen())
           );
         }
       },

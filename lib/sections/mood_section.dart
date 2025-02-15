@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
+import '../services/database_service.dart';
 
 class MoodSection extends StatelessWidget {
   const MoodSection({super.key});
 
+  Future<void> _saveMood(String mood) async {
+    await DatabaseService.insertData({
+      "mood": mood,
+      "timestamp": DateTime.now().toIso8601String()
+    });
+  }
+
   Widget _buildMoodButton(String label, IconData icon, Color backgroundColor) {
-    return Column(
-      children: [
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(16),
+    return GestureDetector(
+      onTap: () => _saveMood(label),  // Save mood on tap
+      child: Column(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(icon, color: Colors.black54, size: 28),
           ),
-          child: Icon(icon, color: Colors.black54, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-        ),
-      ],
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
     );
   }
 
