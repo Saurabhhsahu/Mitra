@@ -124,7 +124,7 @@ class _GeminiChatbotState extends State<GeminiChatbot> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
+                    color: Colors.white,
                     spreadRadius: 1,
                     blurRadius: 5,
                     offset: const Offset(0, -2),
@@ -152,7 +152,7 @@ class _GeminiChatbotState extends State<GeminiChatbot> {
                   const SizedBox(width: 8.0),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.green.shade100,
+                      color: Colors.green.shade400,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: IconButton(
@@ -187,7 +187,7 @@ class ChatMessage extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.7,
         ),
         decoration: BoxDecoration(
-          color: isUser ? Colors.green.shade100 : Colors.grey[200],
+          color: isUser ? Colors.green.shade400 : Colors.grey[200],
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Text(
