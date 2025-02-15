@@ -66,9 +66,21 @@ class _LandingScreenState extends State<LandingScreen> {
               const SizedBox(height: 24),
 
               // Journal and Articles buttons
-              Row(
-                children: [
-                  Expanded(
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(2, 2), // Shadow at the bottom-right
+                        ),
+                      ],
+                    ),
                     child: OutlinedButton.icon(
                       onPressed: () {
                         Navigator.push(
@@ -81,16 +93,30 @@ class _LandingScreenState extends State<LandingScreen> {
                       icon: const Icon(Icons.play_arrow, size: 18),
                       label: const Text('Journal'),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                         side: const BorderSide(color: Colors.black12),
+                        backgroundColor: Colors.white, // Add a background color
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(2, 2), // Shadow at the bottom-right
+                        ),
+                      ],
+                    ),
                     child: OutlinedButton.icon(
                       onPressed: () {
                         Navigator.push(
@@ -103,18 +129,21 @@ class _LandingScreenState extends State<LandingScreen> {
                       icon: const Icon(Icons.article, size: 18),
                       label: const Text('Articles'),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                         side: const BorderSide(color: Colors.black12),
+                        backgroundColor: Colors.white, // Add a background color
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
-              const Spacer(),
+
+            const Spacer(),
 
               // Bottom Navigation Bar
               BottomNavBar(

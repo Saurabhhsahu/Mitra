@@ -1,34 +1,86 @@
 import 'package:flutter/material.dart';
 import '../services/database_service.dart';
+import '../data/user_data.dart';
+import '../models/mood_entry.dart';
 
-class MoodSection extends StatelessWidget {
+class MoodSection extends StatefulWidget {
   const MoodSection({super.key});
 
+  @override
+  _MoodSectionState createState() => _MoodSectionState();
+}
+
+class _MoodSectionState extends State<MoodSection> {
+  MoodEntry? todayMood;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkTodayMood();
+  }
+
+  void _checkTodayMood() {
+    final moodEntries = UserData.getMoodEntries();
+    final today = DateTime.now();
+
+    setState(() {
+      todayMood = moodEntries.firstWhere(
+            (entry) => entry.date.year == today.year &&
+            entry.date.month == today.month &&
+            entry.date.day == today.day,
+        orElse: () => MoodEntry(date: DateTime(2000), mood: ''), // Default if no entry found
+      );
+    });
+  }
+
   Future<void> _saveMood(String mood) async {
+    if (todayMood!.mood.isNotEmpty) return;
+
+    final newMood = MoodEntry(
+      date: DateTime.now(),
+      mood: mood,
+      note: '',
+    );
+
     await DatabaseService.insertData({
       "mood": mood,
       "timestamp": DateTime.now().toIso8601String()
     });
+
+    UserData.addMoodEntry(newMood);
+
+    setState(() {
+      todayMood = newMood;
+    });
   }
 
   Widget _buildMoodButton(String label, IconData icon, Color backgroundColor) {
+    final bool isDisabled = todayMood!.mood.isNotEmpty;
+
     return GestureDetector(
-      onTap: () => _saveMood(label),  // Save mood on tap
+      onTap: isDisabled ? null : () => _saveMood(label),
       child: Column(
         children: [
           Container(
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: isDisabled ? Colors.grey.shade300 : backgroundColor,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: Colors.black54, size: 28),
+            child: Icon(
+              icon,
+              color: Colors.black54,
+              size: 28,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 12),
+            style: TextStyle(
+              fontSize: 12,
+              color: isDisabled ? Colors.grey : Colors.black,
+            ),
           ),
         ],
       ),
@@ -48,6 +100,12 @@ class MoodSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+        if (todayMood!.mood.isNotEmpty)
+          Text(
+            'You already recorded your mood today: ${todayMood!.mood}',
+            style: const TextStyle(fontSize: 14, color: Colors.black54),
+          ),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

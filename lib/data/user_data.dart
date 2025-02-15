@@ -1,6 +1,6 @@
-// lib/data/user_data.dart
 import '../models/user_model.dart';
 import '../models/mood_entry.dart';
+import 'dart:math';
 
 class UserData {
   // Singleton instance
@@ -10,7 +10,21 @@ class UserData {
 
   UserData._internal();
 
-  // Mock user data
+  static final List<String> _moods = ['Happy', 'Angry', 'Calm', 'Manic'];
+
+  static final List<MoodEntry> _moodEntries = [
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 1)), mood: 'Happy', note: 'Great day at work!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 2)), mood: 'Angry', note: 'Got stuck in traffic.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 3)), mood: 'Calm', note: 'Had a relaxing weekend.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 4)), mood: 'Manic', note: 'So much energy today!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 5)), mood: 'Happy', note: 'Completed a big project!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 6)), mood: 'Calm', note: 'Peaceful day with family.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 7)), mood: 'Angry', note: 'Had an argument with a friend.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 8)), mood: 'Manic', note: 'Worked on a new idea nonstop!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 9)), mood: 'Happy', note: 'Received great feedback!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 10)), mood: 'Calm', note: 'A quiet and restful day.'),
+  ];
+
   static User getUser() {
     return User(
       name: 'Saurabh Kumar',
@@ -24,59 +38,22 @@ class UserData {
     );
   }
 
-  // Mock mood entries
   static List<MoodEntry> getMoodEntries() {
-    final today = DateTime.now();
-
-    return [
-      MoodEntry(
-        date: today.subtract(const Duration(days: 6)),
-        mood: 'Happy',
-        note: 'Completed my project ahead of schedule!',
-      ),
-      MoodEntry(
-        date: today.subtract(const Duration(days: 5)),
-        mood: 'Good',
-        note: 'Had a productive day at work.',
-      ),
-      MoodEntry(
-        date: today.subtract(const Duration(days: 4)),
-        mood: 'Neutral',
-        note: 'Just an ordinary day.',
-      ),
-      MoodEntry(
-        date: today.subtract(const Duration(days: 3)),
-        mood: 'Sad',
-        note: 'Missed an important deadline.',
-      ),
-      MoodEntry(
-        date: today.subtract(const Duration(days: 2)),
-        mood: 'Angry',
-        note: 'Got stuck in traffic for 2 hours!',
-      ),
-      MoodEntry(
-        date: today.subtract(const Duration(days: 1)),
-        mood: 'Good',
-        note: 'Found a solution to a tough problem.',
-      ),
-      MoodEntry(
-        date: today,
-        mood: 'Happy',
-        note: 'It\'s Friday!',
-      ),
-    ];
+    return _moodEntries;
   }
 
-  // Method to handle real API data when available
-  static Future<User> fetchUserData() async {
-    // This would be replaced with actual API call
-    // For now, return mock data
-    return getUser();
+  static void addMoodEntry(MoodEntry moodEntry) {
+    final today = DateTime.now();
+    if (_moodEntries.any((entry) =>
+    entry.date.year == today.year &&
+        entry.date.month == today.month &&
+        entry.date.day == today.day)) {
+      return;
+    }
+    _moodEntries.add(moodEntry);
   }
 
   static Future<List<MoodEntry>> fetchMoodEntries() async {
-    // This would be replaced with actual API call
-    // For now, return mock data
-    return getMoodEntries();
+    return Future.value(getMoodEntries());
   }
 }
