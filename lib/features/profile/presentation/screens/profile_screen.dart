@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mitra/core/config/colors.dart';
 import 'package:mitra/features/auth/domain/entities/user.dart';
+import 'package:mitra/features/auth/presentation/screens/login.dart';
 import 'package:mitra/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:mitra/injection_container.dart';
 import 'package:mitra/models/mood_entry.dart';
@@ -21,19 +22,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<ProfileBloc>()..add(LoadProfile()),
-      child: BlocBuilder<ProfileBloc, ProfileState>(
+      child: BlocConsumer<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is LogoutSuccess) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+          }
+        },
         builder: (context, state) {
           if (state is ProfileLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
           }
 
           if (state is ProfileError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.error,
-                    ),
+            return Scaffold(
+              body: Center(
+                child: Text(
+                  state.message,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.error,
+                      ),
+                ),
               ),
             );
           }
@@ -53,13 +66,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 actions: [
                   IconButton(
                     icon: Icon(
-                      Icons.settings_outlined,
-                      color: AppColors.primary,
+                      Icons.logout_rounded,
+                      color: AppColors.error,
                     ),
                     onPressed: () {
-                      // Navigate to settings
+                      final profileBloc = context.read<ProfileBloc>();
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) => AlertDialog(
+                          title: Text(
+                            'Logout',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          content: Text(
+                            'Are you sure you want to logout?',
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(dialogContext),
+                              child: Text(
+                                'Cancel',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                profileBloc.add(LogoutRequested());
+                                Navigator.pop(dialogContext);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.error,
+                                foregroundColor: AppColors.surface,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                'Logout',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: AppColors.surface,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
+                  const SizedBox(width: 8),
                 ],
                 backgroundColor: AppColors.surface,
                 elevation: 0,
@@ -79,7 +153,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          return const SizedBox.shrink();
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         },
       ),
     );

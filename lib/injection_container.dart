@@ -3,7 +3,9 @@ import 'package:mitra/features/auth/data/repositories/auth_repository_impl.dart'
 import 'package:mitra/features/auth/data/sources/auth_service.dart';
 import 'package:mitra/features/auth/data/sources/local_auth_service.dart';
 import 'package:mitra/features/auth/domain/repositories/auth_repository.dart';
+import 'package:mitra/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:mitra/features/auth/domain/usecases/sign_up_usecase.dart';
+import 'package:mitra/features/auth/presentation/bloc/signin_bloc/signin_bloc.dart';
 import 'package:mitra/features/auth/presentation/bloc/signup_bloc/signup_bloc.dart';
 import 'package:mitra/features/profile/presentation/bloc/profile_bloc.dart';
 
@@ -29,6 +31,11 @@ Future<void> init() async {
     () => SignUpUseCase(sl()),
   );
 
+  // Usecases
+  sl.registerLazySingleton(
+    () => SignInUseCase(sl()),
+  );
+
   // BLoCs
   sl.registerFactory(
     () => SignupBloc(signUpUseCase: sl()),
@@ -36,6 +43,11 @@ Future<void> init() async {
 
   // BLoCs
   sl.registerFactory(
-    () => ProfileBloc(localAuthService: sl()),
+    () => ProfileBloc(localAuthService: sl(), authRepository: sl()),
+  );
+
+  // BLoCs
+  sl.registerFactory(
+    () => SignInBloc(signInUseCase: sl()),
   );
 }

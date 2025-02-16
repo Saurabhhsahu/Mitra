@@ -46,9 +46,11 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         password: password,
       );
+      await localAuthService.saveUser(userModel);
+
       return Right(userModel.toEntity());
     } catch (e) {
-      return Left('Server Failure');
+      return Left(e.toString());
     }
   }
 

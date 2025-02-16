@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mitra/core/utils/app_logger.dart';
+import 'package:mitra/features/auth/data/sources/local_auth_service.dart';
+import 'package:mitra/injection_container.dart';
 
 import '../models/user_model.dart';
 
@@ -87,7 +89,7 @@ class FirebaseAuthService implements AuthService {
       );
 
       if (userCredential.user == null) {
-        throw Exception('Sign in failed');
+        throw Exception('Sign in failed: No user returned');
       }
 
       // Fetch user data from Firestore
@@ -100,6 +102,7 @@ class FirebaseAuthService implements AuthService {
         throw Exception('User data not found');
       }
 
+      AppLogger.success('SignIn Service: SignIn Success');
       return UserModel.fromJson(userData.data()!);
     } on FirebaseAuthException catch (e) {
       throw _handleFirebaseAuthError(e);
@@ -111,8 +114,13 @@ class FirebaseAuthService implements AuthService {
   @override
   Future<void> signOut() async {
     try {
+      final localAuthService = sl<LocalAuthService>();
+      await localAuthService.clearUser();
+      AppLogger.info('Local storage cleared');
       await _auth.signOut();
+      AppLogger.success('SignOut Service: SignOut Success');
     } catch (e) {
+      AppLogger.error('SignOut Service: SignOut Failed - $e');
       throw Exception('Sign out failed: $e');
     }
   }

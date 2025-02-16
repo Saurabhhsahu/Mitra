@@ -8,6 +8,7 @@ import 'package:mitra/injection_container.dart' as di;
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/auth/presentation/bloc/signin_bloc/signin_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,9 +39,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<SignupBloc>(),
         ),
+        BlocProvider(
+          create: (context) => di.sl<SignInBloc>(),
+        ),
       ],
       child: MaterialApp(
-        title: 'Depression Management App',
+        title: 'Mitra',
         theme: AppTheme.lightTheme,
         home: isLoggedIn ? const LandingScreen() : const SignupScreen(),
         debugShowCheckedModeBanner: false,
