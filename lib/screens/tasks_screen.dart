@@ -1,97 +1,147 @@
-// lib/screens/tasks_screen.dart
 import 'package:flutter/material.dart';
 import 'package:mitra/data/journey_data.dart';
+import 'package:mitra/data/ongoing_journey_data.dart';
 import 'package:mitra/models/journey_model.dart';
 
-class TasksScreen extends StatefulWidget {
-  const TasksScreen({super.key});
+class JourneyListScreen extends StatefulWidget {
+  const JourneyListScreen({super.key});
 
   @override
-  State<TasksScreen> createState() => _TasksScreenState();
+  _JourneyListScreenState createState() => _JourneyListScreenState();
 }
 
-class _TasksScreenState extends State<TasksScreen> {
-  List<Journey> previousJourneys = [];
-  Journey? currentJourney;
+class _JourneyListScreenState extends State<JourneyListScreen> {
+  Map<int, bool> expandedJourneys = {}; // Track expanded journeys
 
-  @override
-  void initState() {
-    super.initState();
-    if (journeyPool.isNotEmpty) {
-      currentJourney = journeyPool.removeAt(0);
-    }
+  void toggleTaskCompletion(int index) {
+    setState(() {
+      ongoingJourney.tasks[index] =
+          ongoingJourney.tasks[index].copyWith(completed: !ongoingJourney.tasks[index].completed);
+    });
   }
 
-  void completeTask(int index) {
+  void toggleJourneyExpansion(int index) {
     setState(() {
-      currentJourney!.tasks[index] =
-          currentJourney!.tasks[index].copyWith(completed: true);
-
-      if (currentJourney!.isCompleted) {
-        previousJourneys.add(currentJourney!);
-        currentJourney =
-        journeyPool.isNotEmpty ? journeyPool.removeAt(0) : null;
-      }
+      expandedJourneys[index] = !(expandedJourneys[index] ?? false);
     });
+  }
+
+  double calculateProgress() {
+    int completedTasks = ongoingJourney.tasks.where((task) => task.completed).length;
+    return completedTasks / ongoingJourney.tasks.length;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Journeys')),
+      appBar: AppBar(
+        title: const Text(
+          'All Journeys',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            if (currentJourney != null) ...[
-              Text(
-                'Current Journey: ${currentJourney!.name}',
-                style:
-                const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: currentJourney!.tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = currentJourney!.tasks[index];
-                    return ListTile(
-                      title: Text(task.name),
-                      subtitle: Text(task.description),
-                      trailing: Checkbox(
-                        value: task.completed,
-                        onChanged: (bool? value) {
-                          if (!task.completed) {
-                            completeTask(index);
-                          }
+            // Ongoing Journey Section
+            Card(
+              elevation: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Ongoing Journey: ${ongoingJourney.name}",
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text("Difficulty: ${ongoingJourney.difficulty}"),
+                    const SizedBox(height: 10),
+
+                    // Progress Bar
+                    LinearProgressIndicator(
+                      value: calculateProgress(),
+                      backgroundColor: Colors.grey[300],
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Checklist for Ongoing Journey
+                    Column(
+                      children: List.generate(
+                        ongoingJourney.tasks.length,
+                            (index) {
+                          final task = ongoingJourney.tasks[index];
+                          return CheckboxListTile(
+                            title: Text(task.name),
+                            subtitle: Text(task.description),
+                            value: task.completed,
+                            onChanged: (value) => toggleTaskCompletion(index),
+                          );
                         },
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
-            ],
-            if (previousJourneys.isNotEmpty) ...[
-              const SizedBox(height: 20),
-              const Text(
-                "Completed Journeys:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: previousJourneys.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(previousJourneys[index].name),
-                      subtitle: Text(
-                          "Difficulty: ${previousJourneys[index].difficulty}"),
-                      trailing:
-                      const Icon(Icons.check_circle, color: Colors.green),
-                    );
-                  },
-                ),
-              ),
-            ],
+            ),
+
+            // All Journeys List
+            const Text(
+              "All Journeys",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: journeyPool.length,
+              itemBuilder: (context, index) {
+                final Journey journey = journeyPool[index];
+                bool isExpanded = expandedJourneys[index] ?? false;
+
+                return Card(
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          journey.name,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text("Difficulty: ${journey.difficulty}"),
+                        leading: const Icon(Icons.map, color: Colors.blue),
+                        trailing: IconButton(
+                          icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+                          onPressed: () => toggleJourneyExpansion(index),
+                        ),
+                      ),
+                      if (isExpanded)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: journey.tasks.map((task) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                child: Text(
+                                  "• ${task.name}: ${task.description}",
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

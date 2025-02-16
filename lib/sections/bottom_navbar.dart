@@ -55,7 +55,7 @@ class BottomNavBar extends StatelessWidget {
         } else if (index == 2) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const TasksScreen()),
+            MaterialPageRoute(builder: (context) => const JourneyListScreen()),
           );
         }else if(index == 4){
           Navigator.push(
