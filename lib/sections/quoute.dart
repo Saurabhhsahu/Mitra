@@ -10,7 +10,6 @@ class MessageBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blueAccent.withOpacity(0.1), // Light background color
         borderRadius: BorderRadius.circular(12), // Rounded corners
         border: Border.all(
           color: Colors.blueAccent.withOpacity(0.3), // Border color

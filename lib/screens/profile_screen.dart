@@ -86,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMoodChart(List<MoodEntry> entries) {
+  Widget buildMoodChart(List<MoodEntry> entries) {
     // Group entries by day for the chart
     final Map<DateTime, MoodEntry> entriesByDay = {};
     for (var entry in entries) {
@@ -106,6 +106,42 @@ class ProfileScreen extends StatelessWidget {
     final displayDates = sortedDates.length > 7
         ? sortedDates.sublist(sortedDates.length - daysToShow)
         : sortedDates;
+
+    // Convert mood string to numeric value for the chart
+    double getMoodValue(String mood) {
+      switch (mood.toLowerCase()) {
+        case 'angry':
+          return 0;
+        case 'sad':
+          return 1;
+        case 'neutral':
+          return 2;
+        case 'good':
+          return 3;
+        case 'happy':
+          return 4;
+        default:
+          return 2; // Default to neutral
+      }
+    }
+
+    // Get color based on mood
+    Color getMoodColor(String mood) {
+      switch (mood.toLowerCase()) {
+        case 'angry':
+          return Colors.red;
+        case 'sad':
+          return Colors.orange;
+        case 'neutral':
+          return Colors.yellow;
+        case 'good':
+          return Colors.lightBlue;
+        case 'happy':
+          return Colors.green;
+        default:
+          return Colors.grey;
+      }
+    }
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -128,15 +164,18 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 24),
             SizedBox(
               height: 200,
-              child: LineChart(
+              child: displayDates.isEmpty
+                  ? const Center(child: Text('No mood data available yet'))
+                  : LineChart(
                 LineChartData(
-                  gridData: FlGridData(show: false),
+                  gridData: const FlGridData(show: false),
                   titlesData: FlTitlesData(
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          if (value.toInt() >= 0 && value.toInt() < displayDates.length) {
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < displayDates.length) {
                             final date = displayDates[value.toInt()];
                             return Padding(
                               padding: const EdgeInsets.only(top: 8.0),
@@ -173,10 +212,10 @@ class ProfileScreen extends StatelessWidget {
                         reservedSize: 50,
                       ),
                     ),
-                    topTitles: AxisTitles(
+                    topTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
-                    rightTitles: AxisTitles(
+                    rightTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
@@ -190,28 +229,7 @@ class ProfileScreen extends StatelessWidget {
                       spots: List.generate(displayDates.length, (index) {
                         final date = displayDates[index];
                         final entry = entriesByDay[date]!;
-
-                        double moodValue;
-                        switch (entry.mood.toLowerCase()) {
-                          case 'angry':
-                            moodValue = 0;
-                            break;
-                          case 'sad':
-                            moodValue = 1;
-                            break;
-                          case 'neutral':
-                            moodValue = 2;
-                            break;
-                          case 'good':
-                            moodValue = 3;
-                            break;
-                          case 'happy':
-                            moodValue = 4;
-                            break;
-                          default:
-                            moodValue = 2; // Default to neutral
-                        }
-
+                        final moodValue = getMoodValue(entry.mood);
                         return FlSpot(index.toDouble(), moodValue);
                       }),
                       isCurved: true,
@@ -223,27 +241,7 @@ class ProfileScreen extends StatelessWidget {
                         getDotPainter: (spot, percent, barData, index) {
                           final date = displayDates[index];
                           final entry = entriesByDay[date]!;
-
-                          Color dotColor;
-                          switch (entry.mood.toLowerCase()) {
-                            case 'angry':
-                              dotColor = Colors.red;
-                              break;
-                            case 'sad':
-                              dotColor = Colors.orange;
-                              break;
-                            case 'neutral':
-                              dotColor = Colors.yellow;
-                              break;
-                            case 'good':
-                              dotColor = Colors.lightBlue;
-                              break;
-                            case 'happy':
-                              dotColor = Colors.green;
-                              break;
-                            default:
-                              dotColor = Colors.grey;
-                          }
+                          final dotColor = getMoodColor(entry.mood);
 
                           return FlDotCirclePainter(
                             radius: 5,

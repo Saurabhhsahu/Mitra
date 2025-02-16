@@ -25,7 +25,8 @@ class _MoodSectionState extends State<MoodSection> {
 
     setState(() {
       todayMood = moodEntries.firstWhere(
-            (entry) => entry.date.year == today.year &&
+            (entry) =>
+        entry.date.year == today.year &&
             entry.date.month == today.month &&
             entry.date.day == today.day,
         orElse: () => MoodEntry(date: DateTime(2000), mood: ''), // Default if no entry found
@@ -110,9 +111,10 @@ class _MoodSectionState extends State<MoodSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildMoodButton('Happy', Icons.emoji_emotions, Colors.green.shade100),
-            _buildMoodButton('Calm', Icons.water, Colors.blue.shade100),
-            _buildMoodButton('Manic', Icons.cyclone, Colors.pink.shade100),
-            _buildMoodButton('Angry', Icons.sentiment_very_dissatisfied, Colors.orange.shade100),
+            _buildMoodButton('Good', Icons.thumb_up, Colors.blue.shade100),
+            _buildMoodButton('Neutral', Icons.sentiment_neutral, Colors.grey.shade300),
+            _buildMoodButton('Sad', Icons.sentiment_dissatisfied, Colors.blueGrey.shade100),
+            _buildMoodButton('Angry', Icons.sentiment_very_dissatisfied, Colors.red.shade100),
           ],
         ),
       ],

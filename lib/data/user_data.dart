@@ -10,19 +10,19 @@ class UserData {
 
   UserData._internal();
 
-  static final List<String> _moods = ['Happy', 'Angry', 'Calm', 'Manic'];
+  static final List<String> _moods = ['Happy', 'Good', 'Neutral', 'Sad','Angry'];
 
   static final List<MoodEntry> _moodEntries = [
     MoodEntry(date: DateTime.now().subtract(const Duration(days: 1)), mood: 'Happy', note: 'Great day at work!'),
     MoodEntry(date: DateTime.now().subtract(const Duration(days: 2)), mood: 'Angry', note: 'Got stuck in traffic.'),
-    MoodEntry(date: DateTime.now().subtract(const Duration(days: 3)), mood: 'Calm', note: 'Had a relaxing weekend.'),
-    MoodEntry(date: DateTime.now().subtract(const Duration(days: 4)), mood: 'Manic', note: 'So much energy today!'),
-    MoodEntry(date: DateTime.now().subtract(const Duration(days: 5)), mood: 'Happy', note: 'Completed a big project!'),
-    MoodEntry(date: DateTime.now().subtract(const Duration(days: 6)), mood: 'Calm', note: 'Peaceful day with family.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 3)), mood: 'Neutral', note: 'Had a relaxing weekend.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 4)), mood: 'Neutral', note: 'So much energy today!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 5)), mood: 'Sad', note: 'Completed a big project!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 6)), mood: 'Good', note: 'Peaceful day with family.'),
     MoodEntry(date: DateTime.now().subtract(const Duration(days: 7)), mood: 'Angry', note: 'Had an argument with a friend.'),
-    MoodEntry(date: DateTime.now().subtract(const Duration(days: 8)), mood: 'Manic', note: 'Worked on a new idea nonstop!'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 8)), mood: 'Good', note: 'Worked on a new idea nonstop!'),
     MoodEntry(date: DateTime.now().subtract(const Duration(days: 9)), mood: 'Happy', note: 'Received great feedback!'),
-    MoodEntry(date: DateTime.now().subtract(const Duration(days: 10)), mood: 'Calm', note: 'A quiet and restful day.'),
+    MoodEntry(date: DateTime.now().subtract(const Duration(days: 10)), mood: 'Neutral', note: 'A quiet and restful day.'),
   ];
 
   static User getUser() {

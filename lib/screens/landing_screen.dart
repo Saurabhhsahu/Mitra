@@ -142,7 +142,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ],
                 ),
                 child: const Text(
-                  "Welcome to the app! Here's a motivational message to start your day.",
+                  "Welcome to the Mitra! Here's a motivational message to start your day.",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black87,
