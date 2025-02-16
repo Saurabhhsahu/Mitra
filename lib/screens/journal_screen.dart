@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -12,7 +14,7 @@ class JournalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Journal App',
+      title: 'Daily Journal',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const JournalHomePage(),
     );
@@ -27,7 +29,9 @@ class JournalHomePage extends StatefulWidget {
 }
 
 class _JournalHomePageState extends State<JournalHomePage> {
-  List<String> entries = [];
+  DateTime _selectedDate = DateTime.now();
+  Map<String, String> _journalEntries = {};
+  TextEditingController _entryController = TextEditingController();
 
   @override
   void initState() {
@@ -35,104 +39,105 @@ class _JournalHomePageState extends State<JournalHomePage> {
     _loadEntries();
   }
 
+  /// Load journal entries from SharedPreferences
   Future<void> _loadEntries() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      entries = prefs.getStringList('journalEntries') ?? [];
-    });
+    final String? storedData = prefs.getString('journalEntries');
+
+    if (storedData != null) {
+      setState(() {
+        _journalEntries = Map<String, String>.from(jsonDecode(storedData));
+      });
+    }
+
+    _updateTextField();
   }
 
-  Future<void> _saveEntries() async {
+  /// Save the journal entry to SharedPreferences
+  Future<void> _saveEntry() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('journalEntries', entries);
-  }
+    _journalEntries[_formatDate(_selectedDate)] = _entryController.text.trim();
 
-  void _addEntry(String entry) {
-    setState(() {
-      entries.add(entry);
-    });
-    _saveEntries();
-  }
+    await prefs.setString('journalEntries', jsonEncode(_journalEntries));
 
-  void _deleteEntry(int index) {
-    setState(() {
-      entries.removeAt(index);
-    });
-    _saveEntries();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Journal Entries')),
-      body: entries.isEmpty
-          ? const Center(child: Text('No entries yet.'))
-          : ListView.builder(
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: ListTile(
-                    title: Text(entries[index]),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteEntry(index),
-                    ),
-                  ),
-                );
-              },
-            ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          final newEntry = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NewEntryPage()),
-          );
-          if (newEntry != null) {
-            _addEntry(newEntry);
-          }
-        },
-      ),
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Journal Entry Saved!')),
     );
+
+    setState(() {}); // Refresh UI to show red dot
   }
-}
 
-class NewEntryPage extends StatefulWidget {
-  const NewEntryPage({super.key});
+  /// Update text field when a date is selected
+  void _updateTextField() {
+    _entryController.text = _journalEntries[_formatDate(_selectedDate)] ?? "";
+  }
 
-  @override
-  _NewEntryPageState createState() => _NewEntryPageState();
-}
-
-class _NewEntryPageState extends State<NewEntryPage> {
-  final TextEditingController _controller = TextEditingController();
+  /// Format date as YYYY-MM-DD
+  String _formatDate(DateTime date) {
+    return "${date.year}-${date.month}-${date.day}";
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('New Entry')),
+      appBar: AppBar(title: const Text('Daily Journal')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _controller,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: 'Write your journal entry here...',
-                border: OutlineInputBorder(),
+            // Calendar Widget with Red Dot Indicator
+            TableCalendar(
+              focusedDay: _selectedDate,
+              firstDay: DateTime(2000),
+              lastDay: DateTime(2100),
+              calendarFormat: CalendarFormat.month,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDate, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDate = selectedDay;
+                  _updateTextField();
+                });
+              },
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (_journalEntries.containsKey(_formatDate(date))) {
+                    return Positioned(
+                      bottom: 1,
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  }
+                  return null;
+                },
               ),
             ),
             const SizedBox(height: 20),
+
+            // Journal Entry Text Field
+            Expanded(
+              child: TextField(
+                controller: _entryController,
+                maxLines: 8,
+                decoration: const InputDecoration(
+                  hintText: "Write your daily note...",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Save Button
             ElevatedButton(
-              onPressed: () {
-                if (_controller.text.trim().isNotEmpty) {
-                  Navigator.pop(context, _controller.text.trim());
-                }
-              },
-              child: const Text('Save Entry'),
+              onPressed: _saveEntry,
+              child: const Text("Save Entry"),
             ),
           ],
         ),
