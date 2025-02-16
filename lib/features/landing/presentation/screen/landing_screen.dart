@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:mitra/core/config/colors.dart';
 import 'package:mitra/core/utils/time_utils.dart';
 import 'package:mitra/core/utils/app_logger.dart';
+import 'package:mitra/features/auth/data/sources/local_auth_service.dart';
 import 'package:mitra/features/landing/presentation/widget/gradient_button.dart';
 import 'package:mitra/features/landing/presentation/widget/greeting_card.dart';
 import 'package:mitra/features/chatbot/presentation/chatbot_screen.dart';
-import 'package:mitra/screens/profile_screen.dart';
+import 'package:mitra/features/profile/presentation/screens/profile_screen.dart';
+import 'package:mitra/injection_container.dart';
 import '../../../../screens/articles_screen.dart';
 import '../../../../screens/journal_screen.dart';
 import '../widget/mood_section.dart';
@@ -108,6 +110,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late String _greeting;
+  late String _userName = '';
+  late String _lastLogin = 'Last login: Today at 9:00 AM';
 
   late AnimationController _animationController;
 
@@ -119,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _greeting = getGreeting();
+    _loadUserData();
     AppLogger.info('Initial greeting set to: $_greeting');
 
     _animationController = AnimationController(
@@ -153,6 +158,18 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
+  Future<void> _loadUserData() async {
+    final localAuthService = sl<LocalAuthService>();
+    final user = localAuthService.getUser();
+
+    if (user != null) {
+      setState(() {
+        _userName = '${user.firstName} ${user.lastName}';
+      });
+      AppLogger.debug('Loaded user name: $_userName');
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -179,8 +196,8 @@ class _HomeScreenState extends State<HomeScreen>
                         const SizedBox(height: 32),
                         GreetingCard(
                           greeting: _greeting,
-                          userName: 'Saurabh Kumar',
-                          lastLoginTime: 'Last login: Today at 9:00 AM',
+                          userName: _userName,
+                          lastLoginTime: _lastLogin,
                         ),
                         const SizedBox(height: 16),
                         const MoodSection(),

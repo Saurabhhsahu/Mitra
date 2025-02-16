@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'colors.dart';
+import 'package:mitra/core/config/colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -97,7 +97,63 @@ class AppTheme {
           letterSpacing: 0.5,
         ),
       ),
-      // Other theme configurations will be added here
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.surface,
+        labelStyle: TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 16,
+        ),
+        hintStyle: TextStyle(
+          color: AppColors.textSecondary.withOpacity(0.5),
+          fontSize: 14,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: AppColors.primary.withOpacity(0.1),
+            width: 1.5,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: AppColors.primary.withOpacity(0.1),
+            width: 1.5,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: 1.5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: AppColors.error,
+            width: 1.5,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: AppColors.error,
+            width: 1.5,
+          ),
+        ),
+        prefixIconColor: AppColors.primary,
+        suffixIconColor: AppColors.primary,
+        errorStyle: TextStyle(
+          color: AppColors.error,
+          fontSize: 12,
+        ),
+      ),
     );
   }
 }

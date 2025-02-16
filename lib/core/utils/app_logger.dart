@@ -20,6 +20,10 @@ class AppLogger {
     _logger.i(message);
   }
 
+  static void success(String message) {
+    _logger.i('✅ $message'); // Using info level with success emoji
+  }
+
   static void warning(String message) {
     _logger.w(message);
   }
