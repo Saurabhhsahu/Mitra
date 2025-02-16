@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mitra/core/config/theme.dart';
 import 'screens/landing_screen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,10 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Depression Management App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
+      theme: AppTheme.lightTheme,
       home: const LandingScreen(),
     );
   }
