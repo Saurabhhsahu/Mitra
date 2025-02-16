@@ -41,34 +41,58 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
         ),
         backgroundColor: Colors.blue,
         centerTitle: true,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             // Ongoing Journey Section
-            Card(
-              elevation: 4,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
               margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(2, 2),
+                  ),
+                ],
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Ongoing Journey: ${ongoingJourney.name}",
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
                     ),
-                    Text("Difficulty: ${ongoingJourney.difficulty}"),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Difficulty: ${ongoingJourney.difficulty}",
+                      style: const TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 16),
 
                     // Progress Bar
-                    LinearProgressIndicator(
-                      value: calculateProgress(),
-                      backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: calculateProgress(),
+                        backgroundColor: Colors.grey[200],
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
 
                     // Checklist for Ongoing Journey
                     Column(
@@ -76,11 +100,45 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
                         ongoingJourney.tasks.length,
                             (index) {
                           final task = ongoingJourney.tasks[index];
-                          return CheckboxListTile(
-                            title: Text(task.name),
-                            subtitle: Text(task.description),
-                            value: task.completed,
-                            onChanged: (value) => toggleTaskCompletion(index),
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            margin: const EdgeInsets.only(bottom: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: const Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                            child: CheckboxListTile(
+                              title: Text(
+                                task.name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: task.completed ? TextDecoration.lineThrough : null,
+                                  color: task.completed ? Colors.grey : Colors.black87,
+                                ),
+                              ),
+                              subtitle: Text(
+                                task.description,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: task.completed ? Colors.grey : Colors.black54,
+                                ),
+                              ),
+                              value: task.completed,
+                              onChanged: (value) => toggleTaskCompletion(index),
+                              activeColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -93,9 +151,13 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
             // All Journeys List
             const Text(
               "All Journeys",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -104,20 +166,42 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
                 final Journey journey = journeyPool[index];
                 bool isExpanded = expandedJourneys[index] ?? false;
 
-                return Card(
-                  elevation: 3,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(2, 2),
+                      ),
+                    ],
+                  ),
                   child: Column(
                     children: [
                       ListTile(
                         title: Text(
                           journey.name,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
                         ),
-                        subtitle: Text("Difficulty: ${journey.difficulty}"),
+                        subtitle: Text(
+                          "Difficulty: ${journey.difficulty}",
+                          style: const TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
                         leading: const Icon(Icons.map, color: Colors.blue),
                         trailing: IconButton(
-                          icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+                          icon: Icon(
+                            isExpanded ? Icons.expand_less : Icons.expand_more,
+                            color: Colors.blue,
+                          ),
                           onPressed: () => toggleJourneyExpansion(index),
                         ),
                       ),
@@ -131,7 +215,7 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 4),
                                 child: Text(
                                   "• ${task.name}: ${task.description}",
-                                  style: const TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16, color: Colors.black87),
                                 ),
                               );
                             }).toList(),
