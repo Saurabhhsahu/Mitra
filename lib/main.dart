@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mitra/core/config/theme.dart';
-import 'screens/landing_screen.dart';
+import 'features/landing/presentation/screen/landing_screen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 

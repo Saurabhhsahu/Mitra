@@ -24,6 +24,7 @@ dependencies:
   table_calendar: ^3.0.9
   google_fonts:
   logger: ^2.0.2+1
+  lottie: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -36,3 +37,4 @@ flutter:
   assets:
     - assets/anxiety.jpg
     - assets/session.jpg
+    - assets/lottie/
