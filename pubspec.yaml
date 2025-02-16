@@ -25,6 +25,7 @@ dependencies:
   google_fonts:
   logger: ^2.0.2+1
   lottie: ^3.0.0
+  flutter_markdown: ^0.7.6+2
 
 dev_dependencies:
   flutter_test:

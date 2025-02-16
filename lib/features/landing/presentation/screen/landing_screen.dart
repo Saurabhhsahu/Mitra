@@ -5,6 +5,7 @@ import 'package:mitra/core/utils/time_utils.dart';
 import 'package:mitra/core/utils/app_logger.dart';
 import 'package:mitra/features/landing/presentation/widget/gradient_button.dart';
 import 'package:mitra/features/landing/presentation/widget/greeting_card.dart';
+import 'package:mitra/features/chatbot/presentation/chatbot_screen.dart';
 import 'package:mitra/screens/profile_screen.dart';
 import '../../../../screens/articles_screen.dart';
 import '../../../../screens/journal_screen.dart';
@@ -19,9 +20,11 @@ class LandingScreen extends StatefulWidget {
   State<LandingScreen> createState() => _LandingScreenState();
 }
 
-class _LandingScreenState extends State<LandingScreen>
-    with SingleTickerProviderStateMixin {
+class _LandingScreenState extends State<LandingScreen> {
   int _selectedIndex = 0;
+  Timer? _timer;
+  // ignore: unused_field
+  late String _greeting;
 
   void _onNavBarTapped(int index) {
     setState(() {
@@ -30,11 +33,35 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   final List<Widget> _screens = [
-    const HomeScreen(), // We'll extract current landing content into this
+    const HomeScreen(),
+    const GeminiChatbot(),
     const JournalHomePage(),
     const ArticlesScreen(),
-    const ProfileScreen(), // You'll need to create this
+    const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _greeting = getGreeting();
+
+    // Create periodic timer
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (mounted) {
+        // Check if widget is mounted before setState
+        setState(() {
+          _greeting = getGreeting();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel timer when widget is disposed
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,13 +77,13 @@ class _LandingScreenState extends State<LandingScreen>
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, -2),
-                    ),
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: AppColors.primary.withOpacity(0.1),
+                  //     blurRadius: 10,
+                  //     offset: const Offset(0, -2),
+                  //   ),
+                  // ],
                 ),
                 child: BottomNavBar(
                   currentIndex: _selectedIndex,

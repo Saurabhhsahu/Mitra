@@ -31,14 +31,6 @@ class BottomNavBar extends StatelessWidget {
           color: AppColors.primary.withOpacity(0.08),
           width: 1.5,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.05),
-            blurRadius: 20,
-            spreadRadius: 1,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Theme(
         data: Theme.of(context).copyWith(
@@ -46,8 +38,9 @@ class BottomNavBar extends StatelessWidget {
             indicatorColor: const Color(0xFF2E7DD1).withOpacity(0.12),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            height: 70,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            height: 50, // Reduced height since we removed labels
+            labelBehavior:
+                NavigationDestinationLabelBehavior.alwaysHide, // Hide labels
           ),
         ),
         child: NavigationBar(
@@ -55,36 +48,44 @@ class BottomNavBar extends StatelessWidget {
           onDestinationSelected: onTap,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          height: 70,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          height: 50, // Reduced height
+          labelBehavior:
+              NavigationDestinationLabelBehavior.alwaysHide, // Hide labels
           animationDuration: const Duration(milliseconds: 400),
           destinations: [
             _buildNavDestination(
               icon: Icons.home_outlined,
               selectedIcon: Icons.home_rounded,
-              label: 'Home',
+              label: '', // Empty label
               isSelected: currentIndex == 0,
+              theme: theme,
+            ),
+            _buildNavDestination(
+              icon: Icons.chat_bubble_outline_rounded,
+              selectedIcon: Icons.chat_bubble_rounded,
+              label: '', // Empty label
+              isSelected: currentIndex == 1,
               theme: theme,
             ),
             _buildNavDestination(
               icon: Icons.edit_note_outlined,
               selectedIcon: Icons.edit_note,
-              label: 'Journal',
-              isSelected: currentIndex == 1,
+              label: '', // Empty label
+              isSelected: currentIndex == 2,
               theme: theme,
             ),
             _buildNavDestination(
               icon: Icons.article_outlined,
               selectedIcon: Icons.article,
-              label: 'Articles',
-              isSelected: currentIndex == 2,
+              label: '', // Empty label
+              isSelected: currentIndex == 3,
               theme: theme,
             ),
             _buildNavDestination(
               icon: Icons.person_outline,
               selectedIcon: Icons.person,
-              label: 'Profile',
-              isSelected: currentIndex == 3,
+              label: '', // Empty label
+              isSelected: currentIndex == 4,
               theme: theme,
             ),
           ],
