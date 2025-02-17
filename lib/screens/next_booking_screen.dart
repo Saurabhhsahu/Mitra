@@ -92,7 +92,7 @@ class _DoctorInfoCard extends StatelessWidget {
                     Text(
                       '30 min consultation',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: const Color(0xFFC66408),
                         fontSize: 14,
                       ),
                     ),
@@ -174,7 +174,7 @@ class _BookingFormState extends State<BookingForm> {
             height: 56,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xFFC66408),
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -201,7 +201,7 @@ class _BookingFormState extends State<BookingForm> {
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Colors.blue),
+        Icon(icon, size: 20, color: const Color(0xFFC66408)),
         SizedBox(width: 8),
         Text(
           title,
@@ -219,9 +219,9 @@ class _BookingFormState extends State<BookingForm> {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: const Color(0xFFC66408).withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFFC66408).withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +231,7 @@ class _BookingFormState extends State<BookingForm> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: const Color(0xFFC66408),
             ),
           ),
           SizedBox(height: 8),
@@ -254,7 +254,7 @@ class _BookingFormState extends State<BookingForm> {
   Widget _buildSummaryRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.blue),
+        Icon(icon, size: 16, color: const Color(0xFFC66408)),
         SizedBox(width: 8),
         Text(
           '$label:',
@@ -309,7 +309,7 @@ class _BookingFormState extends State<BookingForm> {
             Text(
               '${_formatDate(selectedDate!)} at $selectedTime',
               style: TextStyle(
-                color: Colors.blue,
+                color: const Color(0xFFC66408),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -366,15 +366,15 @@ class DateSelectionWidget extends StatelessWidget {
               width: 72,
               margin: EdgeInsets.only(right: 12),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.blue : Colors.white,
+                color: isSelected ? const Color(0xFFC66408) : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isSelected ? Colors.blue : Colors.grey.withOpacity(0.3),
+                  color: isSelected ? const Color(0xFFC66408) : Colors.grey.withOpacity(0.3),
                   width: 1,
                 ),
                 boxShadow: isSelected ? [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.2),
+                    color: const Color(0xFFC66408).withOpacity(0.2),
                     blurRadius: 8,
                     offset: Offset(0, 4),
                   ),
@@ -454,15 +454,15 @@ class TimeSelectionWidget extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.blue : Colors.white,
+              color: isSelected ? const Color(0xFFC66408) : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? Colors.blue : Colors.grey.withOpacity(0.3),
+                color: isSelected ? const Color(0xFFC66408) : Colors.grey.withOpacity(0.3),
                 width: 1,
               ),
               boxShadow: isSelected ? [
                 BoxShadow(
-                  color: Colors.blue.withOpacity(0.2),
+                  color: const Color(0xFFC66408).withOpacity(0.2),
                   blurRadius: 8,
                   offset: Offset(0, 4),
                 ),

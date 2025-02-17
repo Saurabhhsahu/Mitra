@@ -266,13 +266,13 @@ class _HomeScreenState extends State<HomeScreen>
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.lightbulb_outline,
+                                    Icons.chat_bubble_outline,
                                     color: AppColors.primary,
                                     size: 24,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    "Daily Inspiration",
+                                    "Feeling Low? chat with Mitra",
                                     style: theme.textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textPrimary,
@@ -282,9 +282,31 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                "Welcome to the app! Here's a motivational message to start your day.",
+                                "If you're feeling down or need someone to talk to, click below to chat with Mitra.",
                                 style: theme.textTheme.bodyLarge?.copyWith(
                                   color: AppColors.textSecondary,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Navigate to the chat screen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          GeminiChatbot(), // Replace 'GeminiChatbot' with your actual chat screen widget
+                                    ),
+                                  );
+                                },
+                                child: Text('Chat Now'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors
+                                      .primary, // Use your primary color
+                                  foregroundColor: Colors.white, // Text color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                               ),
                             ],

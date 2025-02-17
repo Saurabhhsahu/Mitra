@@ -32,21 +32,21 @@ class DoctorsScreen extends StatelessWidget {
       body: Column(
         children: [
           // Specialties horizontal list
-          Container(
-            height: 120,
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildSpecialtyCard('General', Icons.medical_services, Colors.blue),
-                _buildSpecialtyCard('Cardiology', Icons.favorite, Colors.red),
-                _buildSpecialtyCard('Dental', Icons.medical_information, Colors.orange),
-                _buildSpecialtyCard('Eye Care', Icons.remove_red_eye, Colors.purple),
-                _buildSpecialtyCard('Pediatric', Icons.child_care, Colors.green),
-              ],
-            ),
-          ),
+          // Container(
+          //   height: 120,
+          //   padding: EdgeInsets.symmetric(vertical: 16),
+          //   child: ListView(
+          //     padding: EdgeInsets.symmetric(horizontal: 16),
+          //     scrollDirection: Axis.horizontal,
+          //     children: [
+          //       _buildSpecialtyCard('General', Icons.medical_services, Colors.blue),
+          //       _buildSpecialtyCard('Cardiology', Icons.favorite, Colors.red),
+          //       _buildSpecialtyCard('Dental', Icons.medical_information, Colors.orange),
+          //       _buildSpecialtyCard('Eye Care', Icons.remove_red_eye, Colors.purple),
+          //       _buildSpecialtyCard('Pediatric', Icons.child_care, Colors.green),
+          //     ],
+          //   ),
+          // ),
           
           // Doctors list
           Expanded(
