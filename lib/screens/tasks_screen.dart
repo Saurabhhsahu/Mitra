@@ -1,115 +1,34 @@
 import 'package:flutter/material.dart';
-import 'chatbot_screen.dart';
+import 'package:mitra/data/journey_data.dart';
+import 'package:mitra/data/ongoing_journey_data.dart';
+import 'package:mitra/models/journey_model.dart';
 
-class Task {
-  final String taskName;
-  final String taskType;
-  final String difficulty;
-  final bool completed;
-  final int? totalCount;
-  final int? completedCount;
-  final String taskReason;
-
-  Task({
-    required this.taskName,
-    required this.taskType,
-    required this.difficulty,
-    required this.completed,
-    this.totalCount,
-    this.completedCount,
-    required this.taskReason,
-  });
-
-  // Add a copyWith method to update task properties
-  Task copyWith({
-    String? taskName,
-    String? taskType,
-    String? difficulty,
-    bool? completed,
-    int? totalCount,
-    int? completedCount,
-    String? taskReason,
-  }) {
-    return Task(
-      taskName: taskName ?? this.taskName,
-      taskType: taskType ?? this.taskType,
-      difficulty: difficulty ?? this.difficulty,
-      completed: completed ?? this.completed,
-      totalCount: totalCount ?? this.totalCount,
-      completedCount: completedCount ?? this.completedCount,
-      taskReason: taskReason ?? this.taskReason,
-    );
-  }
-}
-
-class TasksScreen extends StatefulWidget {
-  const TasksScreen({super.key});
+class JourneyListScreen extends StatefulWidget {
+  const JourneyListScreen({super.key});
 
   @override
-  State<TasksScreen> createState() => _TasksScreenState();
+  _JourneyListScreenState createState() => _JourneyListScreenState();
 }
 
-class _TasksScreenState extends State<TasksScreen> {
-  List<Task> tasks = [
-    Task(
-      taskName: "Morning Gratitude Check-in",
-      taskType: "checkmark",
-      difficulty: "easy",
-      completed: false,
-      taskReason: "To encourage the user to start the day with positive thoughts.",
-    ),
-    Task(
-      taskName: "Complete a 5-minute mindfulness exercise",
-      taskType: "checkmark",
-      difficulty: "easy",
-      completed: false,
-      taskReason: "To help the user focus and relax through mindfulness.",
-    ),
-    Task(
-      taskName: "Talk to 5 people",
-      taskType: "discrete",
-      difficulty: "medium",
-      completed: false,
-      totalCount: 5,
-      completedCount: 2,
-      taskReason: "Reduce fear of social interactions.",
-    ),
-  ];
+class _JourneyListScreenState extends State<JourneyListScreen> {
+  Map<int, bool> expandedJourneys = {}; // Track expanded journeys
 
-  Set<int> expandedTasks = {}; // Track expanded tasks
-
-  double getProgress() {
-    int totalTasks = tasks.length;
-    if (totalTasks == 0) return 0.0;
-
-    int completedTasks = tasks.where((task) {
-      if (task.taskType == "checkmark") {
-        return task.completed;
-      } else if (task.taskType == "discrete") {
-        return task.completedCount == task.totalCount;
-      }
-      return false;
-    }).length;
-
-    return completedTasks / totalTasks;
-  }
-
-  bool get allTasksCompleted {
-    return tasks.every((task) {
-      if (task.taskType == "checkmark") {
-        return task.completed;
-      } else if (task.taskType == "discrete") {
-        return task.completedCount == task.totalCount;
-      }
-      return false;
+  void toggleTaskCompletion(int index) {
+    setState(() {
+      ongoingJourney.tasks[index] =
+          ongoingJourney.tasks[index].copyWith(completed: !ongoingJourney.tasks[index].completed);
     });
   }
 
-  void _navigateToChatbotScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ChatbotScreen()),
-    );
+  void toggleJourneyExpansion(int index) {
+    setState(() {
+      expandedJourneys[index] = !(expandedJourneys[index] ?? false);
+    });
+  }
+
+  double calculateProgress() {
+    int completedTasks = ongoingJourney.tasks.where((task) => task.completed).length;
+    return completedTasks / ongoingJourney.tasks.length;
   }
 
   @override
@@ -117,166 +36,196 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'My Tasks',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+          'All Journeys',
+          style: TextStyle(color: Colors.white),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.blue,
+        centerTitle: true,
         elevation: 0,
       ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ListView(
           children: [
-            // Progress Bar
-            Container(
-              padding: const EdgeInsets.all(16),
+            // Ongoing Journey Section
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5)),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(2, 2),
+                  ),
                 ],
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Progress: ${(getProgress() * 100).toInt()}%',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Ongoing Journey: ${ongoingJourney.name}",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
                       ),
-                      Text(
-                        '${tasks.where((task) => task.completed).length}/${tasks.length} Tasks',
-                        style: const TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Difficulty: ${ongoingJourney.difficulty}",
+                      style: const TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Progress Bar
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: calculateProgress(),
+                        backgroundColor: Colors.grey[200],
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Checklist for Ongoing Journey
+                    Column(
+                      children: List.generate(
+                        ongoingJourney.tasks.length,
+                            (index) {
+                          final task = ongoingJourney.tasks[index];
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            margin: const EdgeInsets.only(bottom: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: const Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                            child: CheckboxListTile(
+                              title: Text(
+                                task.name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: task.completed ? TextDecoration.lineThrough : null,
+                                  color: task.completed ? Colors.grey : Colors.black87,
+                                ),
+                              ),
+                              subtitle: Text(
+                                task.description,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: task.completed ? Colors.grey : Colors.black54,
+                                ),
+                              ),
+                              value: task.completed,
+                              onChanged: (value) => toggleTaskCompletion(index),
+                              activeColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // All Journeys List
+            const Text(
+              "All Journeys",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: journeyPool.length,
+              itemBuilder: (context, index) {
+                final Journey journey = journeyPool[index];
+                bool isExpanded = expandedJourneys[index] ?? false;
+
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(2, 2),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(
-                      value: getProgress(),
-                      minHeight: 10,
-                      backgroundColor: Colors.grey[200],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Tasks List
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  final task = tasks[index];
-                  final isExpanded = expandedTasks.contains(index);
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isExpanded) {
-                          expandedTasks.remove(index);
-                        } else {
-                          expandedTasks.add(index);
-                        }
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5)),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: task.taskType == "checkmark"
-                                ? Checkbox(
-                              value: task.completed,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  tasks[index] = task.copyWith(completed: value ?? false);
-                                });
-                              },
-                              activeColor: Colors.blue,
-                            )
-                                : CircularProgressIndicator(
-                              value: task.completedCount! / task.totalCount!,
-                              backgroundColor: Colors.grey[200],
-                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                            ),
-                            title: AnimatedDefaultTextStyle(
-                              duration: const Duration(milliseconds: 200),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                decoration: task.completed ? TextDecoration.lineThrough : null,
-                                color: task.completed ? Colors.grey : Colors.black87,
-                              ),
-                              child: Text(task.taskName),
-                            ),
-                            trailing: AnimatedRotation(
-                              duration: const Duration(milliseconds: 200),
-                              turns: isExpanded ? 0.5 : 0, // Rotate 180° when expanded
-                              child: const Icon(Icons.expand_more, color: Colors.black54),
-                            ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          journey.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
                           ),
-                          AnimatedCrossFade(
-                            duration: const Duration(milliseconds: 200),
-                            crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                            firstChild: const SizedBox.shrink(),
-                            secondChild: Padding(
-                              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    task.taskReason,
-                                    style: TextStyle(fontSize: 16, color: task.completed ? Colors.grey : Colors.black54),
-                                  ),
-                                  if (task.taskType == "discrete")
-                                    const SizedBox(height: 8),
-                                  Text(
-                                    'Completed: ${task.completedCount}/${task.totalCount}',
-                                    style: TextStyle(fontSize: 14, color: Colors.blue),
-                                  ),
-                                ],
-                              ),
-                            ),
+                        ),
+                        subtitle: Text(
+                          "Difficulty: ${journey.difficulty}",
+                          style: const TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
+                        leading: const Icon(Icons.map, color: Colors.blue),
+                        trailing: IconButton(
+                          icon: Icon(
+                            isExpanded ? Icons.expand_less : Icons.expand_more,
+                            color: Colors.blue,
                           ),
-                        ],
+                          onPressed: () => toggleJourneyExpansion(index),
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                      if (isExpanded)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: journey.tasks.map((task) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                child: Text(
+                                  "• ${task.name}: ${task.description}",
+                                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
             ),
-            // Button to navigate to chatbot if all tasks are completed
-            if (allTasksCompleted)
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: ElevatedButton(
-                  onPressed: () => _navigateToChatbotScreen(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: const Text(
-                    'New Task',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ),
-              ),
           ],
         ),
       ),

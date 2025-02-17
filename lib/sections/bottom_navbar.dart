@@ -1,68 +1,133 @@
 import 'package:flutter/material.dart';
-import '../screens/chatbot_screen.dart';
-import '../screens/tasks_screen.dart';
-import '../screens/profile_screen.dart';
+import 'package:mitra/core/config/colors.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const BottomNavBar({super.key, required this.currentIndex, required this.onTap});
+  const BottomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 8,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildNavBarItem(Icons.home, 0, context),
-          _buildNavBarItem(Icons.chat_bubble_outline, 1, context),
-          _buildNavBarItem(Icons.book, 2, context),
-          _buildNavBarItem(Icons.notifications_none, 3, context),
-          _buildNavBarItem(Icons.person_outline, 4, context),
-        ],
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: AppColors.primary.withOpacity(0.08),
+          width: 1.5,
+        ),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          navigationBarTheme: NavigationBarThemeData(
+            indicatorColor: const Color(0xFF2E7DD1).withOpacity(0.12),
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            height: 50, // Reduced height since we removed labels
+            labelBehavior:
+                NavigationDestinationLabelBehavior.alwaysHide, // Hide labels
+          ),
+        ),
+        child: NavigationBar(
+          selectedIndex: currentIndex,
+          onDestinationSelected: onTap,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          height: 50, // Reduced height
+          labelBehavior:
+              NavigationDestinationLabelBehavior.alwaysHide, // Hide labels
+          animationDuration: const Duration(milliseconds: 400),
+          destinations: [
+            _buildNavDestination(
+              icon: Icons.home_outlined,
+              selectedIcon: Icons.home_rounded,
+              label: '', // Empty label
+              isSelected: currentIndex == 0,
+              theme: theme,
+            ),
+            _buildNavDestination(
+              icon: Icons.chat_bubble_outline_rounded,
+              selectedIcon: Icons.chat_bubble_rounded,
+              label: '', // Empty label
+              isSelected: currentIndex == 1,
+              theme: theme,
+            ),
+            _buildNavDestination(
+              icon: Icons.edit_note_outlined,
+              selectedIcon: Icons.edit_note,
+              label: '', // Empty label
+              isSelected: currentIndex == 2,
+              theme: theme,
+            ),
+            _buildNavDestination(
+              icon: Icons.article_outlined,
+              selectedIcon: Icons.article,
+              label: '', // Empty label
+              isSelected: currentIndex == 3,
+              theme: theme,
+            ),
+            _buildNavDestination(
+              icon: Icons.person_outline,
+              selectedIcon: Icons.person,
+              label: '', // Empty label
+              isSelected: currentIndex == 4,
+              theme: theme,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildNavBarItem(IconData icon, int index, BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        icon,
-        color: currentIndex == index ? Colors.blue : Colors.grey,
+  NavigationDestination _buildNavDestination({
+    required IconData icon,
+    required IconData selectedIcon,
+    required String label,
+    required bool isSelected,
+    required ThemeData theme,
+  }) {
+    return NavigationDestination(
+      icon: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
+        child: Icon(
+          icon,
+          color: isSelected
+              ? const Color(0xFF2E7DD1)
+              : const Color(0xFF94A3B8).withOpacity(0.8),
+          size: 26,
+        ),
       ),
-      onPressed: () {
-        onTap(index);
-        if (index == 1) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ChatbotScreen()),
-          );
-        } else if (index == 2) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const TasksScreen()),
-          );
-        }else if(index == 4){
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen())
-          );
-        }
-      },
+      selectedIcon: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
+        child: Icon(
+          selectedIcon,
+          color: const Color(0xFF2E7DD1),
+          size: 26,
+        ),
+      ),
+      label: label,
+      tooltip: label,
     );
   }
 }
