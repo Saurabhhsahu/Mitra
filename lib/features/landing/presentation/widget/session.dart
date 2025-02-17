@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:lottie/lottie.dart';
-import 'package:mitra/core/config/colors.dart';
+import 'package:mitra/screens/book_session.dart'; // Import DoctorsScreen
 
 class SessionWidget extends StatelessWidget {
   const SessionWidget({Key? key}) : super(key: key);
@@ -9,22 +8,29 @@ class SessionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Define the base color (0xFFC66408)
+    final Color baseColor = const Color(0xFFC66408);
+
+    // Define darker and lighter shades of the base color
+    final Color darkerColor = Color.alphaBlend(Colors.black.withOpacity(0.2), baseColor);
+    final Color lighterColor = Color.alphaBlend(Colors.white.withOpacity(0.3), baseColor);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withOpacity(0.9),
-            AppColors.primary,
+            darkerColor, // Darker shade on the left
+            lighterColor, // Lighter shade on the right
           ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.centerLeft, // Gradient starts from the left
+          end: Alignment.centerRight, // Gradient ends on the right
         ),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.2),
+            color: Colors.orange.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 4),
             spreadRadius: 2,
@@ -58,23 +64,28 @@ class SessionWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DoctorsScreen(),
+                    ),
+                  ),
                   icon: Icon(
                     Icons.calendar_today_rounded,
                     size: 20,
-                    color: AppColors.primary,
+                    color: baseColor, // Use the base color for the icon
                   ),
                   label: Text(
                     'Book Session',
                     style: theme.textTheme.labelLarge?.copyWith(
-                      color: AppColors.primary,
+                      color: baseColor, // Use the base color for the text
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.primary,
+                    backgroundColor: Colors.white, // White button background
+                    foregroundColor: baseColor, // Base color for text and icon
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -83,16 +94,16 @@ class SessionWidget extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    shadowColor: AppColors.primary.withOpacity(0.3),
+                    shadowColor: Colors.orange.withOpacity(0.3),
                     surfaceTintColor: Colors.transparent,
                   ).copyWith(
-                    overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                      (Set<WidgetState> states) {
-                        if (states.contains(WidgetState.hovered)) {
-                          return AppColors.primary.withOpacity(0.04);
+                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.hovered)) {
+                          return Colors.orange.withOpacity(0.04);
                         }
-                        if (states.contains(WidgetState.pressed)) {
-                          return AppColors.primary.withOpacity(0.12);
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.orange.withOpacity(0.12);
                         }
                         return null;
                       },
@@ -103,33 +114,7 @@ class SessionWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 24),
-          // Expanded(
-          //   flex: 2,
-          //   child: SizedBox(
-          //     height: 120,
-          //     child: Lottie.asset(
-          //       'assets/lottie/landing_session.json',
-          //       fit: BoxFit.contain,
-          //     ),
-          //   ),
-          // ),
         ],
-      ),
-    );
-  }
-}
-
-// Example usage in a screen
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: SessionWidget(),
       ),
     );
   }

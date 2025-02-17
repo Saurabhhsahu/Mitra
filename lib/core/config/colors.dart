@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primary Colors
-  static const primary = Color.fromARGB(255, 107, 154, 196); // Calming blue
-  static const secondary = Color(0xFF97C1D9); // Soft blue
+  static const primary = Color(0xFFC66408); // Calming blue
+  static const secondary = Color(0xFFC66408); // Soft blue
   static const accent = Color(0xFFF4B393); // Warm peach
 
   // Text Colors

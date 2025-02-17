@@ -9,6 +9,7 @@ import 'package:mitra/features/auth/presentation/screens/login.dart';
 import 'package:mitra/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:mitra/injection_container.dart';
 import 'package:mitra/models/mood_entry.dart';
+import 'package:mitra/sections/appointment.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -143,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     _buildProfileHeader(state.user, Theme.of(context)),
                     buildMoodChart(state.moodEntries, Theme.of(context)),
+                    _buildUpcomingAppointmentsSection(),
                     _buildUserInfoSection(state.user, Theme.of(context)),
                     _buildStatisticsSection(
                         state.moodEntries, Theme.of(context)),
@@ -493,6 +495,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+ Widget _buildUpcomingAppointmentsSection() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(
+          'Upcoming Appointments',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.black,
+          ),
+        ),
+        subtitle: Text(
+          'View your upcoming therapist appointments.',
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.arrow_forward),
+          onPressed: () {
+            // Navigate to the upcoming appointments screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UpcomingAppointmentsScreen(),
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
+
+
 
   Widget _buildMoodIndicator(String label, Color color, ThemeData theme) {
     return Row(

@@ -68,7 +68,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       body: SafeArea(
         child: Stack(
           children: [
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen>
                             Expanded(
                               child: GradientButton(
                                 icon: Icons.article,
-                                label: 'Articles',
+                                label: 'Journeys',
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
