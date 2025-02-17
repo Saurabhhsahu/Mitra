@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // For launching phone calls
 import 'package:mitra/core/config/colors.dart';
 import 'package:mitra/core/utils/time_utils.dart';
 import 'package:mitra/core/utils/app_logger.dart';
@@ -26,7 +27,6 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   int _selectedIndex = 0;
   Timer? _timer;
-  // ignore: unused_field
   late String _greeting;
 
   void _onNavBarTapped(int index) {
@@ -51,7 +51,6 @@ class _LandingScreenState extends State<LandingScreen> {
     // Create periodic timer
     _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       if (mounted) {
-        // Check if widget is mounted before setState
         setState(() {
           _greeting = getGreeting();
         });
@@ -80,15 +79,9 @@ class _LandingScreenState extends State<LandingScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: AppColors.primary.withOpacity(0.1),
-                  //     blurRadius: 10,
-                  //     offset: const Offset(0, -2),
-                  //   ),
-                  // ],
                 ),
                 child: BottomNavBar(
+
                   currentIndex: _selectedIndex,
                   onTap: _onNavBarTapped,
                 ),
@@ -99,6 +92,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
     );
   }
+
 }
 
 class HomeScreen extends StatefulWidget {
@@ -108,16 +102,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late String _greeting;
   late String _userName = '';
   late String _lastLogin = 'Last login: Today at 9:00 AM';
 
   late AnimationController _animationController;
-
   late Animation<double> _fadeAnimation;
-
   late Animation<Offset> _slideAnimation;
 
   @override
@@ -125,7 +116,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     _greeting = getGreeting();
     _loadUserData();
-    AppLogger.info('Initial greeting set to: $_greeting');
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
@@ -171,10 +161,29 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
+  // Method to call emergency number or show alert
+  Future<void> _launchEmergencySOS() async {
+    const emergencyNumber = 'tel:112'; // Example number, change it to the appropriate emergency number
+    if (await canLaunch(emergencyNumber)) {
+      await launch(emergencyNumber); // Launch the phone dialer with emergency number
+    } else {
+      // If the dialer cannot be launched, show an alert
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Emergency SOS'),
+            content: Text('Unable to place a call at this time.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -204,6 +213,7 @@ class _HomeScreenState extends State<HomeScreen>
                         const MoodSection(),
                         const SizedBox(height: 32),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: GradientButton(
@@ -212,8 +222,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const JournalHomePage(),
+                                    builder: (context) => const JournalHomePage(),
                                   ),
                                 ),
                               ),
@@ -226,14 +235,31 @@ class _HomeScreenState extends State<HomeScreen>
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const JourneyListScreen(),
+                                    builder: (context) => const JourneyListScreen(),
                                   ),
                                 ),
                               ),
                             ),
+                            const SizedBox(width: 16),
+                            Expanded(
+
+                              flex: 0, // Make sure the FloatingActionButton doesn't stretch
+                              child:  FloatingActionButton(
+                                  onPressed: _launchEmergencySOS,
+                                  backgroundColor: Colors.red,
+                                  child: Icon(
+                                    Icons.emergency,
+                                    size: 30,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+
                           ],
-                        ),
+                        )
+
+
+                        ,
                         const SizedBox(height: 32),
                         Container(
                           padding: const EdgeInsets.all(24),
@@ -290,20 +316,18 @@ class _HomeScreenState extends State<HomeScreen>
                               const SizedBox(height: 20),
                               ElevatedButton(
                                 onPressed: () {
-                                  // Navigate to the chat screen
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          GeminiChatbot(), // Replace 'GeminiChatbot' with your actual chat screen widget
+                                          GeminiChatbot(), // Replace with actual chatbot screen
                                     ),
                                   );
                                 },
                                 child: Text('Chat Now'),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors
-                                      .primary, // Use your primary color
-                                  foregroundColor: Colors.white, // Text color
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -328,6 +352,9 @@ class _HomeScreenState extends State<HomeScreen>
                           child: const SessionWidget(),
                         ),
                         const SizedBox(height: 100),
+
+                        // SOS Emergency Button
+
                       ],
                     ),
                   ),
@@ -339,4 +366,5 @@ class _HomeScreenState extends State<HomeScreen>
       ],
     );
   }
+
 }
