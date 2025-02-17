@@ -10831,7 +10831,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR ParameterInfoU5BU5D_t86995AB4A1693393FE29B058
 		MethodInfo_t* L_5 = ___0_mo;
 		NullCheck(L_5);
 		ParameterInfoU5BU5D_t86995AB4A1693393FE29B058CC3FD727DF0B984C* L_6;
-		L_6 = VirtualFuncInvoker0< ParameterInfoU5BU5D_t86995AB4A1693393FE29B058CC3FD727DF0B984C* >::Invoke(15 /* System.Reflection.ParameterInfo[] System.Reflection.MethodBase::GetParameters() */, L_5);
+		L_6 = VirtualFuncInvoker0< ParameterInfoU5BU5D_t86995AB4A1693393FE29B058CC3FD727DF0B984C* >::Invoke(16 /* System.Reflection.ParameterInfo[] System.Reflection.MethodBase::GetParameters() */, L_5);
 		V_0 = L_6;
 		// ParametersOfMethods[mo] = result;
 		il2cpp_codegen_runtime_class_init_inline(PunExtensions_tDF212CEEF10E6EC4693F6F432034C62C7A0AF5ED_il2cpp_TypeInfo_var);
@@ -11019,7 +11019,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool PunExtensions_CheckIsAssignableFrom_m170
 		Type_t* L_1 = ___1_from;
 		NullCheck(L_0);
 		bool L_2;
-		L_2 = VirtualFuncInvoker1< bool, Type_t* >::Invoke(21 /* System.Boolean System.Type::IsAssignableFrom(System.Type) */, L_0, L_1);
+		L_2 = VirtualFuncInvoker1< bool, Type_t* >::Invoke(22 /* System.Boolean System.Type::IsAssignableFrom(System.Type) */, L_0, L_1);
 		V_0 = L_2;
 		goto IL_000b;
 	}
