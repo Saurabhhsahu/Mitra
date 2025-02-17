@@ -11,6 +11,7 @@ import 'package:mitra/features/profile/presentation/screens/profile_screen.dart'
 import 'package:mitra/injection_container.dart';
 import '../../../../screens/articles_screen.dart';
 import '../../../../screens/journal_screen.dart';
+import '../../../../screens/tasks_screen.dart';
 import '../widget/mood_section.dart';
 import '../../../../sections/bottom_navbar.dart';
 import '../widget/session.dart';
@@ -226,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const ArticlesScreen(),
+                                        const JourneyListScreen(),
                                   ),
                                 ),
                               ),

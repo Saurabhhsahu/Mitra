@@ -1,7 +1,7 @@
 import 'package:mitra/models/journey_model.dart';
 
 Journey ongoingJourney = Journey(
-  name: "Mountain Expedition",
+  name: "Mountain ",
   difficulty: "Hard",
   tasks: [
     Task(name: "Gather Equipment", description: "Collect all the necessary gear."),

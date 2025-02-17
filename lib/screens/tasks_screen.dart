@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mitra/data/journey_data.dart';
-import 'package:mitra/data/ongoing_journey_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:mitra/models/journey_model.dart';
 
 class JourneyListScreen extends StatefulWidget {
@@ -13,22 +13,25 @@ class JourneyListScreen extends StatefulWidget {
 class _JourneyListScreenState extends State<JourneyListScreen> {
   Map<int, bool> expandedJourneys = {}; // Track expanded journeys
 
-  void toggleTaskCompletion(int index) {
-    setState(() {
-      ongoingJourney.tasks[index] =
-          ongoingJourney.tasks[index].copyWith(completed: !ongoingJourney.tasks[index].completed);
-    });
+  Future<List<Journey>> fetchJourneys() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('completed_journeys').get();
+    return snapshot.docs.map((doc) {
+      return Journey(
+        name: doc['name'],
+        difficulty: doc['difficulty'],
+        tasks: (doc['tasks'] as List).map((task) => Task(
+          name: task['name'],
+          description: task['description'],
+          completed: task['completed'] ?? false,
+        )).toList(),
+      );
+    }).toList();
   }
 
   void toggleJourneyExpansion(int index) {
     setState(() {
       expandedJourneys[index] = !(expandedJourneys[index] ?? false);
     });
-  }
-
-  double calculateProgress() {
-    int completedTasks = ongoingJourney.tasks.where((task) => task.completed).length;
-    return completedTasks / ongoingJourney.tasks.length;
   }
 
   @override
@@ -45,127 +48,21 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            // Ongoing Journey Section
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(2, 2),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Ongoing Journey: ${ongoingJourney.name}",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Difficulty: ${ongoingJourney.difficulty}",
-                      style: const TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Progress Bar
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: calculateProgress(),
-                        backgroundColor: Colors.grey[200],
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Checklist for Ongoing Journey
-                    Column(
-                      children: List.generate(
-                        ongoingJourney.tasks.length,
-                            (index) {
-                          final task = ongoingJourney.tasks[index];
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.only(bottom: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: const Offset(1, 1),
-                                ),
-                              ],
-                            ),
-                            child: CheckboxListTile(
-                              title: Text(
-                                task.name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  decoration: task.completed ? TextDecoration.lineThrough : null,
-                                  color: task.completed ? Colors.grey : Colors.black87,
-                                ),
-                              ),
-                              subtitle: Text(
-                                task.description,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: task.completed ? Colors.grey : Colors.black54,
-                                ),
-                              ),
-                              value: task.completed,
-                              onChanged: (value) => toggleTaskCompletion(index),
-                              activeColor: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // All Journeys List
-            const Text(
-              "All Journeys",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: journeyPool.length,
+        child: FutureBuilder<List<Journey>>(
+          future: fetchJourneys(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            List<Journey> journeys = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: journeys.length,
               itemBuilder: (context, index) {
-                final Journey journey = journeyPool[index];
+                final Journey journey = journeys[index];
                 bool isExpanded = expandedJourneys[index] ?? false;
-
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.only(bottom: 16),
@@ -225,8 +122,8 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
                   ),
                 );
               },
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
