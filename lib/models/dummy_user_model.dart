@@ -1,7 +1,7 @@
 class User {
   final String id;
   final String username;
-  final String? profileImageUrl;
+  final String? profileImageAsset; // Use asset path instead of URL
   final List<String> interests;
   final bool isOnline;
   final DateTime lastActive;
@@ -9,7 +9,7 @@ class User {
   User({
     required this.id,
     required this.username,
-    this.profileImageUrl,
+    this.profileImageAsset,
     required this.interests,
     this.isOnline = false,
     required this.lastActive,
@@ -19,7 +19,7 @@ class User {
     return User(
       id: map['id'],
       username: map['username'],
-      profileImageUrl: map['profileImageUrl'],
+      profileImageAsset: map['profileImageAsset'] as String?, // Use asset path
       interests: List<String>.from(map['interests']),
       isOnline: map['isOnline'] ?? false,
       lastActive: DateTime.parse(map['lastActive']),
@@ -30,7 +30,7 @@ class User {
     return {
       'id': id,
       'username': username,
-      'profileImageUrl': profileImageUrl,
+      'profileImageAsset': profileImageAsset, // Use asset path
       'interests': interests,
       'isOnline': isOnline,
       'lastActive': lastActive.toIso8601String(),

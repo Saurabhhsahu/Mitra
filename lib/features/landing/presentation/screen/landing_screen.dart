@@ -12,6 +12,7 @@ import 'package:mitra/injection_container.dart';
 import '../../../../screens/articles_screen.dart';
 import '../../../../screens/journal_screen.dart';
 import '../../../../screens/tasks_screen.dart';
+import '../../../../screens/user_discovery.dart';
 import '../widget/mood_section.dart';
 import '../../../../sections/bottom_navbar.dart';
 import '../widget/session.dart';
@@ -272,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    "Feeling Low? chat with Mitra",
+                                    "Feeling Low? Chat with Mitra",
                                     style: theme.textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textPrimary,
@@ -288,26 +289,61 @@ class _HomeScreenState extends State<HomeScreen>
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Navigate to the chat screen
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          GeminiChatbot(), // Replace 'GeminiChatbot' with your actual chat screen widget
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Navigate to the chatbot screen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                GeminiChatbot(),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Chat Now'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
                                     ),
-                                  );
-                                },
-                                child: Text('Chat Now'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors
-                                      .primary, // Use your primary color
-                                  foregroundColor: Colors.white, // Text color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                ),
+                                  const SizedBox(
+                                      width: 10), // Space between buttons
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Navigate to the chatbot screen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserDiscoveryScreen(
+                                              userId: 'currentUser',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Chat with friends'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
