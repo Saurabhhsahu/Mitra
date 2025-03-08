@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/rishi/git/Mitra/linux"
+    "cmake.sourceDirectory": "/home/rishi/git/Mitra/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mitra/screens/dashboard.dart';
+import 'package:mitra/screens/heartrate.dart';
 import 'package:url_launcher/url_launcher.dart'; // For launching phone calls
 import 'package:mitra/core/config/colors.dart';
 import 'package:mitra/core/utils/time_utils.dart';
@@ -31,14 +33,28 @@ class _LandingScreenState extends State<LandingScreen> {
   late String _greeting;
 
   void _onNavBarTapped(int index) {
+    if (index == 1) {
+      // Navigate to chatbot screen when the chat icon is tapped
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const JivaAssistant(),
+        ),
+      );
+      // Don't update the selected index so that when the user returns,
+      // they'll be on the previously selected tab
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
   }
 
   final List<Widget> _screens = [
-    const HomeScreen(),
-    const GeminiChatbot(),
+    const JivaMinimalistDashboard(),
+    const JivaAssistant(),
+    const HeartRateMonitorScreen(),
     const JournalHomePage(),
     const ArticlesScreen(),
     const ProfileScreen(),
@@ -82,7 +98,6 @@ class _LandingScreenState extends State<LandingScreen> {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: BottomNavBar(
-
                   currentIndex: _selectedIndex,
                   onTap: _onNavBarTapped,
                 ),
@@ -93,7 +108,6 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
     );
   }
-
 }
 
 class HomeScreen extends StatefulWidget {
@@ -103,7 +117,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late String _greeting;
   late String _userName = '';
   late String _lastLogin = 'Last login: Today at 9:00 AM';
@@ -164,9 +179,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   // Method to call emergency number or show alert
   Future<void> _launchEmergencySOS() async {
-    const emergencyNumber = 'tel:112'; // Example number, change it to the appropriate emergency number
+    const emergencyNumber =
+        'tel:112'; // Example number, change it to the appropriate emergency number
     if (await canLaunch(emergencyNumber)) {
-      await launch(emergencyNumber); // Launch the phone dialer with emergency number
+      await launch(
+          emergencyNumber); // Launch the phone dialer with emergency number
     } else {
       // If the dialer cannot be launched, show an alert
       showDialog(
@@ -223,7 +240,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const JournalHomePage(),
+                                    builder: (context) =>
+                                        const JournalHomePage(),
                                   ),
                                 ),
                               ),
@@ -236,31 +254,28 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const JourneyListScreen(),
+                                    builder: (context) =>
+                                        const JourneyListScreen(),
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
-
-                              flex: 0, // Make sure the FloatingActionButton doesn't stretch
-                              child:  FloatingActionButton(
-                                  onPressed: _launchEmergencySOS,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(
-                                    Icons.emergency,
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
+                              flex:
+                                  0, // Make sure the FloatingActionButton doesn't stretch
+                              child: FloatingActionButton(
+                                onPressed: _launchEmergencySOS,
+                                backgroundColor: Colors.red,
+                                child: Icon(
+                                  Icons.emergency,
+                                  size: 30,
+                                  color: Colors.white,
                                 ),
                               ),
-
+                            ),
                           ],
-                        )
-
-
-                        ,
+                        ),
                         const SizedBox(height: 32),
                         Container(
                           padding: const EdgeInsets.all(24),
@@ -327,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                GeminiChatbot(),
+                                                JivaAssistant(),
                                           ),
                                         );
                                       },
@@ -392,7 +407,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         const SizedBox(height: 100),
 
                         // SOS Emergency Button
-
                       ],
                     ),
                   ),
@@ -404,5 +418,4 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ],
     );
   }
-
 }

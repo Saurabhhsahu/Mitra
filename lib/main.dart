@@ -5,6 +5,7 @@ import 'package:mitra/features/auth/presentation/screens/signup.dart';
 import 'package:mitra/features/landing/presentation/screen/landing_screen.dart';
 import 'package:mitra/features/auth/data/sources/local_auth_service.dart';
 import 'package:mitra/injection_container.dart' as di;
+import 'package:mitra/screens/dashboard.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

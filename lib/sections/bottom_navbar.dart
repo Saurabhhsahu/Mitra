@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mitra/core/config/colors.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -25,22 +24,25 @@ class BottomNavBar extends StatelessWidget {
         vertical: 8,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.08),
-          width: 1.5,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Theme(
         data: Theme.of(context).copyWith(
           navigationBarTheme: NavigationBarThemeData(
-            indicatorColor: const Color(0xFF2E7DD1).withOpacity(0.12),
+            indicatorColor: const Color(0xFFFFE0E0).withOpacity(0.3),
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            height: 50, // Reduced height since we removed labels
-            labelBehavior:
-                NavigationDestinationLabelBehavior.alwaysHide, // Hide labels
+            height: 50,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           ),
         ),
         child: NavigationBar(
@@ -48,43 +50,43 @@ class BottomNavBar extends StatelessWidget {
           onDestinationSelected: onTap,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          height: 50, // Reduced height
-          labelBehavior:
-              NavigationDestinationLabelBehavior.alwaysHide, // Hide labels
+          height: 50,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           animationDuration: const Duration(milliseconds: 400),
           destinations: [
             _buildNavDestination(
               icon: Icons.home_outlined,
               selectedIcon: Icons.home_rounded,
-              label: '', // Empty label
+              label: '',
               isSelected: currentIndex == 0,
               theme: theme,
             ),
             _buildNavDestination(
-              icon: Icons.chat_bubble_outline_rounded,
-              selectedIcon: Icons.chat_bubble_rounded,
-              label: '', // Empty label
+              icon: Icons.insights_outlined,
+              selectedIcon: Icons.insights,
+              label: '',
               isSelected: currentIndex == 1,
               theme: theme,
             ),
             _buildNavDestination(
-              icon: Icons.edit_note_outlined,
-              selectedIcon: Icons.edit_note,
-              label: '', // Empty label
+              icon: Icons.add_circle_outline,
+              selectedIcon: Icons.add_circle,
+              label: '',
               isSelected: currentIndex == 2,
               theme: theme,
+              isCenter: true,
             ),
             _buildNavDestination(
-              icon: Icons.article_outlined,
-              selectedIcon: Icons.article,
-              label: '', // Empty label
+              icon: Icons.emoji_events_outlined,
+              selectedIcon: Icons.emoji_events,
+              label: '',
               isSelected: currentIndex == 3,
               theme: theme,
             ),
             _buildNavDestination(
               icon: Icons.person_outline,
               selectedIcon: Icons.person,
-              label: '', // Empty label
+              label: '',
               isSelected: currentIndex == 4,
               theme: theme,
             ),
@@ -100,6 +102,7 @@ class BottomNavBar extends StatelessWidget {
     required String label,
     required bool isSelected,
     required ThemeData theme,
+    bool isCenter = false,
   }) {
     return NavigationDestination(
       icon: Padding(
@@ -107,27 +110,87 @@ class BottomNavBar extends StatelessWidget {
           horizontal: 12,
           vertical: 4,
         ),
-        child: Icon(
-          icon,
-          color: isSelected
-              ? const Color(0xFF2E7DD1)
-              : const Color(0xFF94A3B8).withOpacity(0.8),
-          size: 26,
-        ),
+        child: isCenter
+            ? Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFFF676A7)
+                      : const Color(0xFFFFB6C1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              )
+            : Icon(
+                icon,
+                color: isSelected
+                    ? const Color(0xFFF05984)
+                    : const Color(0xFF94A3B8).withOpacity(0.8),
+                size: 26,
+              ),
       ),
       selectedIcon: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 4,
         ),
-        child: Icon(
-          selectedIcon,
-          color: const Color(0xFF2E7DD1),
-          size: 26,
-        ),
+        child: isCenter
+            ? Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF05984),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  selectedIcon,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              )
+            : Icon(
+                selectedIcon,
+                color: const Color(0xFFF05984),
+                size: 26,
+              ),
       ),
       label: label,
       tooltip: label,
+    );
+  }
+}
+
+// Example implementation
+class FitnessAppBottomNav extends StatefulWidget {
+  const FitnessAppBottomNav({super.key});
+
+  @override
+  State<FitnessAppBottomNav> createState() => _FitnessAppBottomNavState();
+}
+
+class _FitnessAppBottomNavState extends State<FitnessAppBottomNav> {
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: const Color(0xFFF9F5F6), // Light pink background from reference
+        child: const Center(
+          child: Text('Fitness App Content Area'),
+        ),
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     );
   }
 }
