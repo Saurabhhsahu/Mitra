@@ -39,8 +39,12 @@ dependencies:
   flutter_tts: ^4.2.2
   qr_flutter: ^4.1.0
   local_auth: ^2.3.0
-  camera: ^0.11.1
+ 
+  camera: ^0.10.5+5
+  heart_bpm: ^2.0.0
   torch_light: ^1.1.0
+  sensors_plus: ^6.1.1
+  permission_handler: ^11.4.0
 
 dev_dependencies:
   flutter_test:

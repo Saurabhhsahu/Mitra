@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mitra/screens/dashboard.dart';
 import 'package:mitra/screens/heartrate.dart';
+import 'package:mitra/screens/sos.dart';
 import 'package:url_launcher/url_launcher.dart'; // For launching phone calls
 import 'package:mitra/core/config/colors.dart';
 import 'package:mitra/core/utils/time_utils.dart';
@@ -54,7 +55,8 @@ class _LandingScreenState extends State<LandingScreen> {
   final List<Widget> _screens = [
     const JivaMinimalistDashboard(),
     const JivaAssistant(),
-    const HeartRateMonitorScreen(),
+    HeartBPMDemo(),
+    const SOSScreen(),
     const JournalHomePage(),
     const ArticlesScreen(),
     const ProfileScreen(),
